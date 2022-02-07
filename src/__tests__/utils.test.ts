@@ -1,4 +1,5 @@
-import { applyFilters } from '../utils';
+import { isArray } from 'lodash';
+import { applyFilters, flatten } from '../utils';
 import { FilterTypes, ParsedFilter } from '../parser/types';
 
 const { NotEquals, RegexNotEquals, RegexEquals } = FilterTypes;

@@ -1,4 +1,4 @@
-import { isNil, omitBy, get } from 'lodash';
+import { isNil, omitBy, get, isArray } from 'lodash';
 import { stringify } from 'query-string';
 import ms from 'ms';
 import { QueryOptions, QueryTarget } from './types';
