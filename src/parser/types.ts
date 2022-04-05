@@ -11,6 +11,7 @@ export type FilterType = '!~' | '=~' | '!=' | '=';
 export enum QueryParserTypes {
   assets = 'assets',
   events = 'events',
+  labels = 'labels',
 }
 
 export interface QueryParserType {

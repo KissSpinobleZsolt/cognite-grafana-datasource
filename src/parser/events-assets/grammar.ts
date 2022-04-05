@@ -1,42 +1,43 @@
-// Generated automatically by nearley, version 2.19.7
+// Generated automatically by nearley, version 2.20.1
 // http://github.com/Hardmath123/nearley
 // Bypasses TS6133. Allow declared but unused functions.
 // @ts-ignore
 
 /* eslint-disable */
-function id(d: any[]): any { return d[0]; }
+function id(d: any[]): any {
+  return d[0];
+}
 
-const formatQuery = ([type, query]) => ({type, query});
+const formatQuery = ([type, query]) => ({ type, query });
 const emptyObject = () => ({});
-const emptyArray = () => ([]);
-
+const emptyArray = () => [];
 
 const join = ([d]) => d.join('');
-const extractPair = d => {
+const extractPair = (d) => {
   return d.length > 2
-	? {[d[0]+d[1]]:{key: d[0], filter: d[1], value: d[2]}}
-	: {[d[0]]: d[1]}
-}
-const extractConditionToArray = d => {
-  if(!d.length) return [];
+    ? { [d[0] + d[1]]: { key: d[0], filter: d[1], value: d[2] } }
+    : { [d[0]]: d[1] };
+};
+const extractConditionToArray = (d) => {
+  if (!d.length) return [];
   const output = [extractPair(d[2])];
 
   for (let i in d[4]) {
-  	output.push(extractPair(d[4][i][2]))
-  }
-
-  return output
-}
-const extractObject = d => {
-  let output = {...extractPair(d[2])};
-
-  for (let i in d[4]) {
-    output = {...output, ...extractPair(d[4][i][2])};
+    output.push(extractPair(d[4][i][2]));
   }
 
   return output;
-}
-const extractArray = d => {
+};
+const extractObject = (d) => {
+  let output = { ...extractPair(d[2]) };
+
+  for (let i in d[4]) {
+    output = { ...output, ...extractPair(d[4][i][2]) };
+  }
+
+  return output;
+};
+const extractArray = (d) => {
   const output = [d[2]];
 
   for (let i in d[4]) {
@@ -44,25 +45,26 @@ const extractArray = d => {
   }
 
   return output;
-}
-
-interface NearleyToken {  value: any;
-  [key: string]: any;
 };
+
+interface NearleyToken {
+  value: any;
+  [key: string]: any;
+}
 
 interface NearleyLexer {
   reset: (chunk: string, info: any) => void;
   next: () => NearleyToken | undefined;
   save: () => any;
-  formatError: (token: NearleyToken) => string;
+  formatError: (token: never) => string;
   has: (tokenType: string) => boolean;
-};
+}
 
 interface NearleyRule {
   name: string;
   symbols: NearleySymbol[];
   postprocess?: (d: any[], loc?: number, reject?: {}) => any;
-};
+}
 
 type NearleySymbol = string | { literal: any } | { test: (token: any) => boolean };
 
@@ -70,14 +72,14 @@ interface Grammar {
   Lexer: NearleyLexer | undefined;
   ParserRules: NearleyRule[];
   ParserStart: string;
-};
+}
 
 const grammar: Grammar = {
   Lexer: undefined,
   ParserRules: [
     {"name": "unsigned_int$ebnf$1", "symbols": [/[0-9]/]},
     {"name": "unsigned_int$ebnf$1", "symbols": ["unsigned_int$ebnf$1", /[0-9]/], "postprocess": (d) => d[0].concat([d[1]])},
-    {"name": "unsigned_int", "symbols": ["unsigned_int$ebnf$1"], "postprocess":
+    {"name": "unsigned_int", "symbols": ["unsigned_int$ebnf$1"], "postprocess": 
         function(d) {
             return parseInt(d[0].join(""));
         }
@@ -88,7 +90,7 @@ const grammar: Grammar = {
     {"name": "int$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "int$ebnf$2", "symbols": [/[0-9]/]},
     {"name": "int$ebnf$2", "symbols": ["int$ebnf$2", /[0-9]/], "postprocess": (d) => d[0].concat([d[1]])},
-    {"name": "int", "symbols": ["int$ebnf$1", "int$ebnf$2"], "postprocess":
+    {"name": "int", "symbols": ["int$ebnf$1", "int$ebnf$2"], "postprocess": 
         function(d) {
             if (d[0]) {
                 return parseInt(d[0][0]+d[1].join(""));
@@ -104,7 +106,7 @@ const grammar: Grammar = {
     {"name": "unsigned_decimal$ebnf$2$subexpression$1", "symbols": [{"literal":"."}, "unsigned_decimal$ebnf$2$subexpression$1$ebnf$1"]},
     {"name": "unsigned_decimal$ebnf$2", "symbols": ["unsigned_decimal$ebnf$2$subexpression$1"], "postprocess": id},
     {"name": "unsigned_decimal$ebnf$2", "symbols": [], "postprocess": () => null},
-    {"name": "unsigned_decimal", "symbols": ["unsigned_decimal$ebnf$1", "unsigned_decimal$ebnf$2"], "postprocess":
+    {"name": "unsigned_decimal", "symbols": ["unsigned_decimal$ebnf$1", "unsigned_decimal$ebnf$2"], "postprocess": 
         function(d) {
             return parseFloat(
                 d[0].join("") +
@@ -121,7 +123,7 @@ const grammar: Grammar = {
     {"name": "decimal$ebnf$3$subexpression$1", "symbols": [{"literal":"."}, "decimal$ebnf$3$subexpression$1$ebnf$1"]},
     {"name": "decimal$ebnf$3", "symbols": ["decimal$ebnf$3$subexpression$1"], "postprocess": id},
     {"name": "decimal$ebnf$3", "symbols": [], "postprocess": () => null},
-    {"name": "decimal", "symbols": ["decimal$ebnf$1", "decimal$ebnf$2", "decimal$ebnf$3"], "postprocess":
+    {"name": "decimal", "symbols": ["decimal$ebnf$1", "decimal$ebnf$2", "decimal$ebnf$3"], "postprocess": 
         function(d) {
             return parseFloat(
                 (d[0] || "") +
@@ -130,7 +132,7 @@ const grammar: Grammar = {
             );
         }
         },
-    {"name": "percentage", "symbols": ["decimal", {"literal":"%"}], "postprocess":
+    {"name": "percentage", "symbols": ["decimal", {"literal":"%"}], "postprocess": 
         function(d) {
             return d[0]/100;
         }
@@ -151,7 +153,7 @@ const grammar: Grammar = {
     {"name": "jsonfloat$ebnf$4$subexpression$1", "symbols": [/[eE]/, "jsonfloat$ebnf$4$subexpression$1$ebnf$1", "jsonfloat$ebnf$4$subexpression$1$ebnf$2"]},
     {"name": "jsonfloat$ebnf$4", "symbols": ["jsonfloat$ebnf$4$subexpression$1"], "postprocess": id},
     {"name": "jsonfloat$ebnf$4", "symbols": [], "postprocess": () => null},
-    {"name": "jsonfloat", "symbols": ["jsonfloat$ebnf$1", "jsonfloat$ebnf$2", "jsonfloat$ebnf$3", "jsonfloat$ebnf$4"], "postprocess":
+    {"name": "jsonfloat", "symbols": ["jsonfloat$ebnf$1", "jsonfloat$ebnf$2", "jsonfloat$ebnf$3", "jsonfloat$ebnf$4"], "postprocess": 
         function(d) {
             return parseFloat(
                 (d[0] || "") +
@@ -225,6 +227,8 @@ const grammar: Grammar = {
     {"name": "type", "symbols": ["type$string$1"], "postprocess": id},
     {"name": "type$string$2", "symbols": [{"literal":"e"}, {"literal":"v"}, {"literal":"e"}, {"literal":"n"}, {"literal":"t"}, {"literal":"s"}], "postprocess": (d) => d.join('')},
     {"name": "type", "symbols": ["type$string$2"], "postprocess": id},
+    {"name": "type$string$3", "symbols": [{"literal":"l"}, {"literal":"a"}, {"literal":"b"}, {"literal":"e"}, {"literal":"l"}, {"literal":"s"}], "postprocess": (d) => d.join('')},
+    {"name": "type", "symbols": ["type$string$3"], "postprocess": id},
     {"name": "condition", "symbols": [{"literal":"{"}, {"literal":"}"}], "postprocess": emptyArray},
     {"name": "condition$ebnf$1", "symbols": []},
     {"name": "condition$ebnf$1$subexpression$1", "symbols": [{"literal":","}, "_", "pair", "_"]},
@@ -248,7 +252,7 @@ const grammar: Grammar = {
     {"name": "pair", "symbols": ["prop_name", "_", "regexp", "_", "regexp_string"], "postprocess": d => [d[0], d[2], d[4]]},
     {"name": "pair", "symbols": ["prop_name", "_", "not_equals", "_", "primitive"], "postprocess": d => [d[0], d[2], d[4]]}
   ],
-  ParserStart: "rule",
+  ParserStart: 'rule',
 };
 
 export default grammar;

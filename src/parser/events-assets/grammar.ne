@@ -42,6 +42,7 @@ const extractArray = d => {
 rule -> type condition {% formatQuery %}
 type -> "assets" {% id %}
   | "events" {% id %}
+  | "labels" {% id %}
 
 condition -> "{" "}" {% emptyArray %}
   | "{" _ pair _ ("," _ pair _):* _ "}" {% extractConditionToArray %}
