@@ -359,10 +359,9 @@ export default class CogniteDatasource extends DataSourceApi<
       filter: params,
       limit: 1000,
     };
-
     const assets = await this.connector.fetchItems<Resource>({
       data,
-      path: `/assets/list`,
+      path: `/${query.match(/^labels/) ? 'labels' : 'assets'}/list`,
       method: HttpMethod.POST,
     });
 
