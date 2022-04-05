@@ -1,5 +1,5 @@
 import { chunk } from 'lodash';
-import { getBackendSrv, BackendSrv } from '@grafana/runtime';
+import { BackendSrv } from '@grafana/runtime';
 import ms from 'ms';
 import {
   RequestParams,
@@ -158,9 +158,5 @@ export class Connector {
 }
 
 const chunkedReqId = (requestId: string, chunk: number) => {
-  return requestId
-    ? {
-        requestId: chunk ? `${requestId}${chunk}` : requestId,
-      }
-    : undefined;
+  return requestId ? { requestId: chunk ? `${requestId}${chunk}` : requestId } : undefined;
 };
