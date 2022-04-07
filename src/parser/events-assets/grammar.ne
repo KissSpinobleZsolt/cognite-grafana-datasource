@@ -56,6 +56,11 @@ array -> "[" _ "]" {% emptyArray %}
   | "[" _ value _ ("," _ value _):* _ "]" {% extractArray %}
 object -> "{" _ "}" {% emptyObject %}
 	| "{" _ pair _ ("," _ pair _):* _ "}" {% extractObject %}
-pair -> prop_name _ equals _ value {% d => [d[0], d[4]] %}
+pair -> prop_name _ equals _ value {% d => {
+  	if(d[0] === 'containsAny') {
+		  const v = d[4][0].externalId.replace('{', '').replace('}', '').split(',').map(externalId => ({externalId}))
+		  return [d[0], v]
+	  } else return [d[0], d[4]]
+  } %}
   | prop_name _ regexp _ regexp_string {% d => [d[0], d[2], d[4]] %}
   | prop_name _ not_equals _ primitive {% d => [d[0], d[2], d[4]] %}

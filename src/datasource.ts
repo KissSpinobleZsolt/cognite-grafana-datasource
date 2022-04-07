@@ -533,14 +533,14 @@ async function findAssetTimeseries(
   connector: Connector
 ): Promise<TimeSeriesResponseItem[]> {
   const assetId = assetQuery.target;
+  const spileted = assetId.split(',');
   const filter = assetQuery.includeSubtrees
     ? {
         assetSubtreeIds: [{ id: Number(assetId) }],
       }
     : {
-        assetIds: [assetId],
+        assetIds: spileted.length > 1 ? spileted : [assetId],
       };
-
   // since /dataquery can only have 100 items and checkboxes become difficult to use past 100 items,
   //  we only get the first 100 timeseries, and show a warning if there are too many timeseries
   const limit = 101;
