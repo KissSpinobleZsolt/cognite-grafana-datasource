@@ -36,6 +36,7 @@ import '../css/common.css';
 import { TemplatesTab } from './templatesTab';
 import { RelationshipsTab } from './relationships';
 import { AdvancedEventFilter } from './advancedEventFilter';
+import { ExtractionPipelinesTab } from './extractionPipelines';
 
 const { FormField } = LegacyForms;
 type EditorProps = QueryEditorProps<CogniteDatasource, CogniteQuery, CogniteDataSourceOptions>;
@@ -563,6 +564,9 @@ export function QueryEditor(props: EditorProps) {
         )}
         {tab === Tabs.Templates && (
           <TemplatesTab {...{ onQueryChange, query, onRunQuery, datasource }} />
+        )}
+        {tab === Tabs.ExtractionPipelines && (
+          <ExtractionPipelinesTab {...{ onQueryChange, query, datasource }} />
         )}
       </TabContent>
       {errorMessage && <pre className="gf-formatted-error">{errorMessage}</pre>}
