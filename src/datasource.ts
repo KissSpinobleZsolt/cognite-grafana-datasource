@@ -79,6 +79,7 @@ import {
 } from './types';
 import { applyFilters, getRequestId, toGranularityWithLowerBound } from './utils';
 import { RelationshipsDatasource } from './datasources/RelationshipsDatasource';
+import { ExtractionPipelinesDatasource } from './datasources/ExtractionPipelinesDatasource';
 
 const appEventsLoader = SystemJS.load('app/core/app_events');
 export default class CogniteDatasource extends DataSourceApi<
@@ -97,6 +98,7 @@ export default class CogniteDatasource extends DataSourceApi<
   backendSrv: BackendSrv;
   templatesDatasource: TemplatesDatasource;
   relationshipsDatasource: RelationshipsDatasource;
+  extractionPipelinesDatasource: ExtractionPipelinesDatasource;
 
   constructor(instanceSettings: DataSourceInstanceSettings<CogniteDataSourceOptions>) {
     super(instanceSettings);
@@ -124,6 +126,7 @@ export default class CogniteDatasource extends DataSourceApi<
     this.project = cogniteProject;
     this.templatesDatasource = new TemplatesDatasource(this.templateSrv, this.connector);
     this.relationshipsDatasource = new RelationshipsDatasource(this.connector);
+    this.extractionPipelinesDatasource = new ExtractionPipelinesDatasource(this.connector);
   }
 
   /**
@@ -134,8 +137,13 @@ export default class CogniteDatasource extends DataSourceApi<
       this.replaceVariablesInTarget(t, options.scopedVars)
     );
 
-    const { eventTargets, tsTargets, templatesTargets, relationshipsQuery } =
-      groupTargets(queryTargets);
+    const {
+      eventTargets,
+      tsTargets,
+      templatesTargets,
+      relationshipsQuery,
+      extractionPipelinesQuery,
+    } = groupTargets(queryTargets);
     const timeRange = getRange(options.range);
     let responseData: (TimeSeries | TableData | MutableDataFrame)[] = [];
     if (queryTargets.length) {
@@ -146,11 +154,20 @@ export default class CogniteDatasource extends DataSourceApi<
           ...options,
           targets: templatesTargets,
         });
-
         const relationshipsResults = await this.relationshipsDatasource.query({
           ...options,
           targets: relationshipsQuery,
         });
+        const extractionPipelinesResults = await this.extractionPipelinesDatasource.query({
+          ...options,
+          targets: extractionPipelinesQuery,
+        });
+        console.log(
+          'extractionPipelinesQuery: ',
+          extractionPipelinesQuery,
+          '\nextractionPipelinesResults: ',
+          extractionPipelinesResults
+        );
         handleFailedTargets(failed);
         showWarnings(succeded);
         responseData = [
@@ -158,6 +175,7 @@ export default class CogniteDatasource extends DataSourceApi<
           ...eventResults,
           ...relationshipsResults.data,
           ...templatesResults.data,
+          ...extractionPipelinesResults.data,
         ];
       } catch (error) {
         return {
@@ -499,7 +517,14 @@ export default class CogniteDatasource extends DataSourceApi<
 export function filterEmptyQueryTargets(targets: CogniteQuery[]): QueryTarget[] {
   return targets.filter((target) => {
     if (target && !target.hide) {
-      const { tab, assetQuery, eventQuery, templateQuery, relationshipsQuery } = target;
+      const {
+        tab,
+        assetQuery,
+        eventQuery,
+        templateQuery,
+        relationshipsQuery,
+        extractionPipelinesQuery,
+      } = target;
       switch (tab) {
         case Tab.Event:
           return eventQuery?.expr || eventQuery.eventQuery;
@@ -519,6 +544,8 @@ export function filterEmptyQueryTargets(targets: CogniteQuery[]): QueryTarget[] 
             !!relationshipsQuery?.dataSetIds.length ||
             !!relationshipsQuery?.labels?.containsAny?.length
           );
+        case Tab.ExtractionPipelines:
+          return extractionPipelinesQuery?.id;
         case Tab.Timeseries:
         default:
           return target.target;
@@ -667,6 +694,7 @@ function groupTargets(targets: CogniteQuery[]) {
     eventTargets: groupedByTab[Tab.Event] ?? [],
     templatesTargets: groupedByTab[Tab.Templates] ?? [],
     relationshipsQuery: groupedByTab[Tab.Relationships] ?? [],
+    extractionPipelinesQuery: groupedByTab[Tab.ExtractionPipelines] ?? [],
     tsTargets: [
       ...(groupedByTab[Tab.Timeseries] ?? []),
       ...(groupedByTab[Tab.Asset] ?? []),
