@@ -16,6 +16,7 @@ export enum Tab {
   Event = 'Event',
   Relationships = 'Relationships',
   Templates = 'Templates',
+  ExtractionPipelines = 'ExtractionPipelines',
 }
 
 export const TabTitles = {
@@ -25,6 +26,7 @@ export const TabTitles = {
   [Tab.Event]: 'Events',
   [Tab.Relationships]: 'Relationships',
   [Tab.Templates]: 'Templates',
+  [Tab.ExtractionPipelines]: 'Extraction Pipelines',
 };
 
 const defaultEventQuery: EventQuery = {
@@ -48,6 +50,10 @@ const defaultAssetQuery: AssetQuery = {
   withRelationships: false,
   includeSubTimeseries: true,
   relationshipsQuery: defaultRelationshipsQuery,
+};
+
+const defaultExtractionPipelinesQuery: ExtractionPipelinesQuery = {
+  id: undefined,
 };
 export interface RelationshipsSelectableValue {
   value?: string | number;
@@ -95,6 +101,9 @@ query {
   datapointsPath: 'pressure.datapoints',
   groupBy: 'name',
 };
+export interface ExtractionPipelinesQuery {
+  id: string | undefined;
+}
 
 export const defaultQuery: Partial<CogniteQuery> = {
   target: '',
@@ -108,6 +117,7 @@ export const defaultQuery: Partial<CogniteQuery> = {
   eventQuery: defaultEventQuery,
   relationshipsQuery: defaultRelationshipsQuery,
   templateQuery: defaultTemplateQuery,
+  extractionPipelinesQuery: defaultExtractionPipelinesQuery,
 };
 
 /**
@@ -176,6 +186,7 @@ export interface CogniteQueryBase extends DataQuery {
   expr: string;
   warning: string;
   relationshipsQuery: RelationshipsQuery;
+  extractionPipelinesQuery: ExtractionPipelinesQuery;
 }
 
 export type TemplateQuery = {
