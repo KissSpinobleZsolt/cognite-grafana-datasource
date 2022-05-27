@@ -3,15 +3,19 @@ import { Select, AsyncMultiSelect, Field, Input, Switch, Tooltip } from '@grafan
 import _ from 'lodash';
 import CogniteDatasource from '../datasource';
 import { SelectedProps } from './queryEditor';
+import '../css/extraction.css';
 
 export const ExtractionPipelinesTab = (
   props: SelectedProps & { datasource: CogniteDatasource }
 ) => {
-  const { query, onQueryChange, datasource } = props;
+  const {
+    query: { extractionPipelinesQuery },
+    onQueryChange,
+    datasource,
+  } = props;
+  const { numeric, id } = extractionPipelinesQuery;
   const [extractionPipelines, setExtractionPipelines] = useState([]);
-  const [extractionPipelinesQuery, setExtractionPipelinesQuery] = useState(
-    query.extractionPipelinesQuery
-  );
+
   useEffect(() => {
     datasource.extractionPipelinesDatasource.getAllExtractionPipelines().then((res) => {
       setExtractionPipelines(
@@ -19,22 +23,37 @@ export const ExtractionPipelinesTab = (
       );
     });
   }, []);
-  const makeChenge = (value) => {
-    onQueryChange({
-      extractionPipelinesQuery: {
-        id: value.value,
-      },
-    });
-  };
   return (
-    <div className="Extraction Pipelines">
-      <Select
-        options={extractionPipelines}
-        value={extractionPipelinesQuery.id}
-        placeholder="Select extraction pipeline"
-        className="cognite-dropdown width-20"
-        onChange={makeChenge}
-      />
+    <div className="extraction-pipelines">
+      <Field label="Extaction Pipeline: ">
+        <Select
+          options={extractionPipelines}
+          value={id}
+          placeholder="Select extraction pipeline"
+          className="cognite-dropdown width-20"
+          onChange={(value) =>
+            onQueryChange({
+              extractionPipelinesQuery: {
+                ...extractionPipelinesQuery,
+                id: value.value,
+              },
+            })
+          }
+        />
+      </Field>
+      <Field label="Change to numeric status">
+        <Switch
+          value={numeric}
+          onChange={() =>
+            onQueryChange({
+              extractionPipelinesQuery: {
+                ...extractionPipelinesQuery,
+                numeric: !numeric,
+              },
+            })
+          }
+        />
+      </Field>
     </div>
   );
 };
