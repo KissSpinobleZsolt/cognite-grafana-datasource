@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Select, AsyncMultiSelect, Field, Input, Switch, Tooltip } from '@grafana/ui';
+import { AsyncMultiSelect, Field, Input, Switch, Tooltip } from '@grafana/ui';
 import _ from 'lodash';
 import CogniteDatasource from '../datasource';
 import { SelectedProps } from './queryEditor';
@@ -13,29 +13,43 @@ export const ExtractionPipelinesTab = (
     onQueryChange,
     datasource,
   } = props;
-  const { numeric, id } = extractionPipelinesQuery;
-  const [extractionPipelines, setExtractionPipelines] = useState([]);
-
-  useEffect(() => {
-    datasource.extractionPipelinesDatasource.getAllExtractionPipelines().then((res) => {
-      setExtractionPipelines(
-        _.map(res, ({ name, externalId }) => ({ label: name, value: externalId }))
-      );
-    });
-  }, []);
+  const { numeric, ids, enableAllExtractionPipelines } = extractionPipelinesQuery;
   return (
     <div className="extraction-pipelines">
       <Field label="Extaction Pipeline: ">
-        <Select
-          options={extractionPipelines}
-          value={id}
+        <AsyncMultiSelect
+          loadOptions={() =>
+            datasource.extractionPipelinesDatasource.getAllExtractionPipelines().then((res) =>
+              _.map(res, ({ name, externalId }) => ({
+                label: name,
+                value: externalId,
+                id: externalId,
+              }))
+            )
+          }
+          value={ids}
+          defaultOptions
+          allowCustomValue
           placeholder="Select extraction pipeline"
           className="cognite-dropdown width-20"
-          onChange={(value) =>
+          onChange={(values) =>
             onQueryChange({
               extractionPipelinesQuery: {
                 ...extractionPipelinesQuery,
-                id: value.value,
+                ids: values,
+              },
+            })
+          }
+        />
+      </Field>
+      <Field label="List all Extraction Pipelines">
+        <Switch
+          value={enableAllExtractionPipelines}
+          onChange={() =>
+            onQueryChange({
+              extractionPipelinesQuery: {
+                ...extractionPipelinesQuery,
+                enableAllExtractionPipelines: !enableAllExtractionPipelines,
               },
             })
           }
