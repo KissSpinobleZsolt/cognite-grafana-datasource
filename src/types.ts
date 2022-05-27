@@ -53,8 +53,9 @@ const defaultAssetQuery: AssetQuery = {
 };
 
 const defaultExtractionPipelinesQuery: ExtractionPipelinesQuery = {
-  id: undefined,
+  ids: [],
   numeric: false,
+  enableAllExtractionPipelines: true,
 };
 export interface RelationshipsSelectableValue {
   value?: string | number;
@@ -103,8 +104,12 @@ query {
   groupBy: 'name',
 };
 export interface ExtractionPipelinesQuery {
-  id?: string | undefined;
+  ids?: {
+    id?: number;
+    value?: string;
+  }[];
   numeric?: boolean;
+  enableAllExtractionPipelines?: boolean;
 }
 
 export const defaultQuery: Partial<CogniteQuery> = {
