@@ -539,7 +539,10 @@ export function filterEmptyQueryTargets(targets: CogniteQuery[]): QueryTarget[] 
             !!relationshipsQuery?.labels?.containsAny?.length
           );
         case Tab.ExtractionPipelines:
-          return extractionPipelinesQuery?.id;
+          return (
+            extractionPipelinesQuery?.ids?.length ||
+            extractionPipelinesQuery.enableAllExtractionPipelines
+          );
         case Tab.Timeseries:
         default:
           return target.target;
