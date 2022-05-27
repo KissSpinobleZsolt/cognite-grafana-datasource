@@ -28,6 +28,7 @@ export class ExtractionPipelinesDatasource {
               ...rest,
               status: evalStatus(status),
               createdTime: new Date(createdTime),
+              id: `${id}`,
             }))
           : response
       );
