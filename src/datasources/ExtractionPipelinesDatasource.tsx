@@ -19,16 +19,12 @@ const convert = (arr) => {
       createdTime,
       lastSeen,
       lastSuccess,
-      id,
-      dataSetId,
       lastUpdatedTime,
       lastFailure,
       contacts,
       ...rest
     }) => ({
       ...rest,
-      id: `${id}`,
-      dataSetId: `${dataSetId}`,
       createdTime: new Date(createdTime),
       lastSeen: new Date(lastSeen),
       lastSuccess: new Date(lastSuccess),
