@@ -162,12 +162,6 @@ export default class CogniteDatasource extends DataSourceApi<
           ...options,
           targets: extractionPipelinesQuery,
         });
-        console.log(
-          'extractionPipelinesQuery: ',
-          extractionPipelinesQuery,
-          '\nextractionPipelinesResults: ',
-          extractionPipelinesResults
-        );
         handleFailedTargets(failed);
         showWarnings(succeded);
         responseData = [
