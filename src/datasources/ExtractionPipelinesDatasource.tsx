@@ -1,8 +1,14 @@
-import { DataQueryRequest, DataQueryResponse } from '@grafana/data';
+import { DataQueryRequest, DataQueryResponse, TimeRange } from '@grafana/data';
 import _ from 'lodash';
 import { CogniteQuery, HttpMethod } from '../types';
 import { Connector } from '../connector';
 
+interface ExtractionPipelinesResponse {
+  status?: string | boolean;
+  createdTime?: TimeRange;
+  message?: string;
+  [x: string]: any;
+}
 // eslint-disable-next-line no-nested-ternary
 const evalStatus = (text) => (text === 'success' ? 1 : text === 'failure' ? 0 : 2);
 export class ExtractionPipelinesDatasource {
@@ -16,15 +22,15 @@ export class ExtractionPipelinesDatasource {
         method: HttpMethod.POST,
         data: { filter: { externalId: id } },
       })
-      .then((response) => {
-        if (numeric) {
-          return _.map(response, ({ status, ...rest }) => ({
-            ...rest,
-            status: evalStatus(status),
-          }));
-        }
-        return response;
-      });
+      .then((response): ExtractionPipelinesResponse[] =>
+        numeric
+          ? _.map(response, ({ status, createdTime, ...rest }) => ({
+              ...rest,
+              status: evalStatus(status),
+              createdTime: new Date(createdTime),
+            }))
+          : response
+      );
   }
   async query(options: DataQueryRequest<CogniteQuery>): Promise<DataQueryResponse> {
     const data = await Promise.all(
