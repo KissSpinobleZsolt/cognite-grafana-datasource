@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { AsyncMultiSelect, Field, Input, Switch, Tooltip } from '@grafana/ui';
+import React from 'react';
+import { AsyncMultiSelect, Field, InlineFormLabel, Switch } from '@grafana/ui';
 import _ from 'lodash';
 import CogniteDatasource from '../datasource';
 import { SelectedProps } from './queryEditor';
@@ -42,32 +42,42 @@ export const ExtractionPipelinesTab = (
           }
         />
       </Field>
-      <Field label="List all Extraction Pipelines">
-        <Switch
-          value={enableAllExtractionPipelines}
-          onChange={() =>
-            onQueryChange({
-              extractionPipelinesQuery: {
-                ...extractionPipelinesQuery,
-                enableAllExtractionPipelines: !enableAllExtractionPipelines,
-              },
-            })
-          }
-        />
-      </Field>
-      <Field label="Change to numeric status">
-        <Switch
-          value={numeric}
-          onChange={() =>
-            onQueryChange({
-              extractionPipelinesQuery: {
-                ...extractionPipelinesQuery,
-                numeric: !numeric,
-              },
-            })
-          }
-        />
-      </Field>
+      <div className="gf-form" style={{ marginTop: 18 }}>
+        <InlineFormLabel tooltip="Fetch all extractionpipelines" width={12}>
+          List all Extraction Pipelines
+        </InlineFormLabel>
+        <div className="gf-form-switch">
+          <Switch
+            value={enableAllExtractionPipelines}
+            onChange={() =>
+              onQueryChange({
+                extractionPipelinesQuery: {
+                  ...extractionPipelinesQuery,
+                  enableAllExtractionPipelines: !enableAllExtractionPipelines,
+                },
+              })
+            }
+          />
+        </div>
+      </div>
+      <div className="gf-form" style={{ marginTop: 18 }}>
+        <InlineFormLabel tooltip="Change Status to numeric value" width={12}>
+          Change to numeric status
+        </InlineFormLabel>
+        <div className="gf-form-switch">
+          <Switch
+            value={numeric}
+            onChange={() =>
+              onQueryChange({
+                extractionPipelinesQuery: {
+                  ...extractionPipelinesQuery,
+                  numeric: !numeric,
+                },
+              })
+            }
+          />
+        </div>
+      </div>
     </div>
   );
 };
