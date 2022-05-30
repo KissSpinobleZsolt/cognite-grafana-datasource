@@ -41,3 +41,9 @@ pre code,
 .gf-dropdown-wrapper {
   min-width: 200px;
 }
+
+.width100p-row {
+  width: 100%;
+  margin-top: 4px;
+  display: flex;
+}

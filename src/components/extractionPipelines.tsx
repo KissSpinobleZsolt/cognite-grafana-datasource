@@ -3,7 +3,6 @@ import { AsyncMultiSelect, Field, InlineFormLabel, Switch } from '@grafana/ui';
 import _ from 'lodash';
 import CogniteDatasource from '../datasource';
 import { SelectedProps } from './queryEditor';
-import '../css/extraction.css';
 
 export const ExtractionPipelinesTab = (
   props: SelectedProps & { datasource: CogniteDatasource }
@@ -15,7 +14,7 @@ export const ExtractionPipelinesTab = (
   } = props;
   const { numeric, ids, enableAllExtractionPipelines } = extractionPipelinesQuery;
   return (
-    <div className="extraction-pipelines">
+    <div className="width100p-row">
       <Field label="Extaction Pipeline: ">
         <AsyncMultiSelect
           loadOptions={() =>

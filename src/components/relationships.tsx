@@ -46,7 +46,7 @@ export const RelationshipsTab = (
   const route = queryBinder ? `${queryBinder}.${queryTypeSelector}` : `${queryTypeSelector}`;
 
   return (
-    <div className="relationships-row">
+    <div className="width100p-row">
       <MultiSelectAsync
         query={query}
         datasource={datasource}

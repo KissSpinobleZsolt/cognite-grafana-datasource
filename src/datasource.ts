@@ -15,7 +15,6 @@ import {
 } from '@grafana/data';
 import { BackendSrv, getBackendSrv, getTemplateSrv, SystemJS, TemplateSrv } from '@grafana/runtime';
 import _ from 'lodash';
-import { TemplatesDatasource } from './datasources/TemplatesDatasource';
 import {
   concurrent,
   datapointsPath,
@@ -78,8 +77,12 @@ import {
   QueriesDataItem,
 } from './types';
 import { applyFilters, getRequestId, toGranularityWithLowerBound } from './utils';
-import { RelationshipsDatasource } from './datasources/RelationshipsDatasource';
-import { ExtractionPipelinesDatasource } from './datasources/ExtractionPipelinesDatasource';
+import {
+  D3Datasource,
+  ExtractionPipelinesDatasource,
+  RelationshipsDatasource,
+  TemplatesDatasource,
+} from './datasources';
 
 const appEventsLoader = SystemJS.load('app/core/app_events');
 export default class CogniteDatasource extends DataSourceApi<
@@ -99,6 +102,7 @@ export default class CogniteDatasource extends DataSourceApi<
   templatesDatasource: TemplatesDatasource;
   relationshipsDatasource: RelationshipsDatasource;
   extractionPipelinesDatasource: ExtractionPipelinesDatasource;
+  d3Datasource: D3Datasource;
 
   constructor(instanceSettings: DataSourceInstanceSettings<CogniteDataSourceOptions>) {
     super(instanceSettings);
@@ -127,6 +131,7 @@ export default class CogniteDatasource extends DataSourceApi<
     this.templatesDatasource = new TemplatesDatasource(this.templateSrv, this.connector);
     this.relationshipsDatasource = new RelationshipsDatasource(this.connector);
     this.extractionPipelinesDatasource = new ExtractionPipelinesDatasource(this.connector);
+    this.d3Datasource = new D3Datasource(this.connector);
   }
 
   /**
@@ -143,6 +148,7 @@ export default class CogniteDatasource extends DataSourceApi<
       templatesTargets,
       relationshipsQuery,
       extractionPipelinesQuery,
+      d3ModelQuery,
     } = groupTargets(queryTargets);
     const timeRange = getRange(options.range);
     let responseData: (TimeSeries | TableData | MutableDataFrame)[] = [];
@@ -162,6 +168,10 @@ export default class CogniteDatasource extends DataSourceApi<
           ...options,
           targets: extractionPipelinesQuery,
         });
+        const d3ModelResponses = await this.d3Datasource.query({
+          ...options,
+          targets: d3ModelQuery,
+        });
         handleFailedTargets(failed);
         showWarnings(succeded);
         responseData = [
@@ -170,6 +180,7 @@ export default class CogniteDatasource extends DataSourceApi<
           ...relationshipsResults.data,
           ...templatesResults.data,
           ...extractionPipelinesResults.data,
+          ...d3ModelResponses.data,
         ];
       } catch (error) {
         return {
@@ -518,6 +529,7 @@ export function filterEmptyQueryTargets(targets: CogniteQuery[]): QueryTarget[] 
         templateQuery,
         relationshipsQuery,
         extractionPipelinesQuery,
+        d3ModelQuery,
       } = target;
       switch (tab) {
         case Tab.Event:
@@ -543,6 +555,8 @@ export function filterEmptyQueryTargets(targets: CogniteQuery[]): QueryTarget[] 
             extractionPipelinesQuery?.ids?.length ||
             extractionPipelinesQuery.enableAllExtractionPipelines
           );
+        case Tab.D3:
+          return d3ModelQuery?.enableD3Models || d3ModelQuery?.modelId;
         case Tab.Timeseries:
         default:
           return target.target;
@@ -692,6 +706,7 @@ function groupTargets(targets: CogniteQuery[]) {
     templatesTargets: groupedByTab[Tab.Templates] ?? [],
     relationshipsQuery: groupedByTab[Tab.Relationships] ?? [],
     extractionPipelinesQuery: groupedByTab[Tab.ExtractionPipelines] ?? [],
+    d3ModelQuery: groupedByTab[Tab.D3] ?? [],
     tsTargets: [
       ...(groupedByTab[Tab.Timeseries] ?? []),
       ...(groupedByTab[Tab.Asset] ?? []),
