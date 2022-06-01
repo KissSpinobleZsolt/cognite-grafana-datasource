@@ -131,7 +131,7 @@ export default class CogniteDatasource extends DataSourceApi<
     this.templatesDatasource = new TemplatesDatasource(this.templateSrv, this.connector);
     this.relationshipsDatasource = new RelationshipsDatasource(this.connector);
     this.extractionPipelinesDatasource = new ExtractionPipelinesDatasource(this.connector);
-    this.d3Datasource = new D3Datasource(this.connector);
+    this.d3Datasource = new D3Datasource(this.connector, this.project, this.url);
   }
 
   /**

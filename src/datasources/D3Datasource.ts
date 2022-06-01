@@ -31,7 +31,7 @@ const convert = (arr) => {
   }));
 };
 export class D3Datasource {
-  public constructor(private connector: Connector) {}
+  public constructor(private connector: Connector, private project: string, private url: string) {}
   private async postQuery(modelId) {
     const { data } = await this.connector.fetchData({
       path: `/3d/models/${modelId}`,
@@ -74,7 +74,7 @@ export class D3Datasource {
       ? [convert(await this.getD3ModelsList())]
       : [];
     return {
-      data: _.concat(all as D3Response, ...data),
+      data: _.concat(all as D3Response, ...data, [{ project: this.project, url: this.url }]),
     };
   }
   async getD3ModelsList() {
