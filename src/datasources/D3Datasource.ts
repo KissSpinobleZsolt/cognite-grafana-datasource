@@ -74,7 +74,7 @@ export class D3Datasource {
       ? [convert(await this.getD3ModelsList())]
       : [];
     return {
-      data: _.concat(all as D3Response, ...data, [{ project: this.project, url: this.url }]),
+      data: _.concat(all as D3Response, ...data, [[{ project: this.project, url: this.url }]]),
     };
   }
   async getD3ModelsList() {
