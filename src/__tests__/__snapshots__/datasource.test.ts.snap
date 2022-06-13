@@ -268,10 +268,12 @@ Object {
       ],
       "target": "test timeseries",
     },
-    Object {
-      "project": "TestProject",
-      "url": "/api/datasources/proxy/6",
-    },
+    Array [
+      Object {
+        "project": "TestProject",
+        "url": "/api/datasources/proxy/6",
+      },
+    ],
   ],
 }
 `;
@@ -451,10 +453,12 @@ Object {
       "datapoints": Array [],
       "target": "Timeseries1",
     },
-    Object {
-      "project": "TestProject",
-      "url": "/api/datasources/proxy/6",
-    },
+    Array [
+      Object {
+        "project": "TestProject",
+        "url": "/api/datasources/proxy/6",
+      },
+    ],
   ],
 }
 `;
@@ -605,10 +609,12 @@ Object {
       "datapoints": Array [],
       "target": "Timeseries3 * Timeseries1 - Timeseries1",
     },
-    Object {
-      "project": "TestProject",
-      "url": "/api/datasources/proxy/6",
-    },
+    Array [
+      Object {
+        "project": "TestProject",
+        "url": "/api/datasources/proxy/6",
+      },
+    ],
   ],
 }
 `;
