@@ -9,6 +9,11 @@ interface D3Response {
   message?: string;
   [x: string]: any;
 }
+interface D3Revision {
+  id: number;
+  fileId: number;
+  status: string;
+}
 interface D3Model {
   assetMappingCount?: number;
   createdTime?: Date;
@@ -39,7 +44,7 @@ export class D3Datasource {
       data: undefined,
     });
 
-    const revision = await this.connector.fetchItems({
+    const revision: D3Revision[] = await this.connector.fetchItems({
       path: `/3d/models/${modelId}/revisions`,
       method: HttpMethod.GET,
       data: undefined,

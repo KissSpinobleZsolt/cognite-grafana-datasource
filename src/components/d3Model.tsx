@@ -4,7 +4,8 @@ import _ from 'lodash';
 import CogniteDatasource from '../datasource';
 import { SelectedProps } from './queryEditor';
 
-export const D3ModelTab = (props: SelectedProps & { datasource: CogniteDatasource }) => {
+export const D3ModelTab = () => <div>Under construction</div>;
+export const D3ModelTab0 = (props: SelectedProps & { datasource: CogniteDatasource }) => {
   const {
     query: { d3ModelQuery },
     onQueryChange,
