@@ -37,7 +37,6 @@ import { TemplatesTab } from './templatesTab';
 import { RelationshipsTab } from './relationships';
 import { AdvancedEventFilter } from './advancedEventFilter';
 import { ExtractionPipelinesTab } from './extractionPipelines';
-import { D3ModelTab } from './d3Model';
 
 const { FormField } = LegacyForms;
 type EditorProps = QueryEditorProps<CogniteDatasource, CogniteQuery, CogniteDataSourceOptions>;
@@ -569,7 +568,6 @@ export function QueryEditor(props: EditorProps) {
         {tab === Tabs.ExtractionPipelines && (
           <ExtractionPipelinesTab {...{ onQueryChange, query, datasource }} />
         )}
-        {tab === Tabs.D3 && <D3ModelTab {...{ onQueryChange, query, datasource }} />}
       </TabContent>
       {errorMessage && <pre className="gf-formatted-error">{errorMessage}</pre>}
       {warningMessage && <pre className="gf-formatted-warning">{warningMessage}</pre>}

@@ -270,8 +270,7 @@ Object {
     },
     Array [
       Object {
-        "project": "TestProject",
-        "url": "/api/datasources/proxy/6",
+        "name": "TestProject",
       },
     ],
   ],
@@ -455,8 +454,7 @@ Object {
     },
     Array [
       Object {
-        "project": "TestProject",
-        "url": "/api/datasources/proxy/6",
+        "name": "TestProject",
       },
     ],
   ],
@@ -611,8 +609,7 @@ Object {
     },
     Array [
       Object {
-        "project": "TestProject",
-        "url": "/api/datasources/proxy/6",
+        "name": "TestProject",
       },
     ],
   ],

@@ -17,7 +17,6 @@ export enum Tab {
   Relationships = 'Relationships',
   Templates = 'Templates',
   ExtractionPipelines = 'ExtractionPipelines',
-  D3 = '3D Models',
 }
 
 export const TabTitles = {
@@ -28,7 +27,6 @@ export const TabTitles = {
   [Tab.Relationships]: 'Relationships',
   [Tab.Templates]: 'Templates',
   [Tab.ExtractionPipelines]: 'Extraction Pipelines',
-  [Tab.D3]: '3D Models',
 };
 
 const defaultEventQuery: EventQuery = {
@@ -105,9 +103,6 @@ query {
   datapointsPath: 'pressure.datapoints',
   groupBy: 'name',
 };
-const defaultD3ModelQuery: D3ModelQuery = {
-  enableD3Models: false,
-};
 export interface ExtractionPipelinesQuery {
   ids?: {
     id?: number;
@@ -129,7 +124,6 @@ export const defaultQuery: Partial<CogniteQuery> = {
   relationshipsQuery: defaultRelationshipsQuery,
   templateQuery: defaultTemplateQuery,
   extractionPipelinesQuery: defaultExtractionPipelinesQuery,
-  d3ModelQuery: defaultD3ModelQuery,
 };
 
 /**
@@ -183,10 +177,6 @@ export interface EventQuery {
   eventQuery: string;
 }
 
-export interface D3ModelQuery {
-  modelId?: number | string;
-  enableD3Models: boolean;
-}
 export type CogniteQuery = CogniteQueryBase & CogniteTargetObj;
 
 export interface CogniteQueryBase extends DataQuery {
@@ -203,7 +193,6 @@ export interface CogniteQueryBase extends DataQuery {
   warning: string;
   relationshipsQuery: RelationshipsQuery;
   extractionPipelinesQuery: ExtractionPipelinesQuery;
-  d3ModelQuery: D3ModelQuery;
 }
 
 export type TemplateQuery = {
