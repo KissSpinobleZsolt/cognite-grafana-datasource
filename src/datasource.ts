@@ -175,7 +175,7 @@ export default class CogniteDatasource extends DataSourceApi<
         ];
       } catch (error) {
         return {
-          data: [[{ name: this.project }]],
+          data: [],
           error: {
             message: error?.message ?? error,
           },
@@ -183,7 +183,7 @@ export default class CogniteDatasource extends DataSourceApi<
       }
     }
 
-    return { data: [...responseData, [{ name: this.project }]] };
+    return { data: [...responseData ] };
   }
 
   async fetchTimeseriesForTargets(
